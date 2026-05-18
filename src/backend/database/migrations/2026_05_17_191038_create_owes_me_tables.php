@@ -1,0 +1,82 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        // 1. USER
+        Schema::create('User', function (Blueprint $table) {
+            $table->integer('user_id')->autoIncrement();
+            $table->string('user_firstname', 32);
+            $table->string('user_lastname', 32);
+            $table->string('user_email', 32);
+            $table->string('user_password', 128);
+            $table->binary('user_photo')->nullable();
+            $table->timestamps();
+        });
+
+        // 2. AGROUP
+        Schema::create('AGroup', function (Blueprint $table) {
+            $table->integer('group_id')->autoIncrement();
+            $table->string('group_name', 32);
+            $table->string('group_label', 64)->nullable();
+            $table->string('group_link', 128)->nullable();
+            $table->binary('group_photo')->nullable();
+            $table->timestamps();
+        });
+
+        // 3. GROUPUSER (Pivot)
+        Schema::create('GroupUser', function (Blueprint $table) {
+            $table->integer('group_id');
+            $table->integer('user_id');
+            $table->timestamps();
+
+            $table->primary(['group_id', 'user_id']);
+            
+            $table->foreign('group_id')->references('group_id')->on('AGroup')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('user_id')->on('User')->onDelete('cascade')->onUpdate('cascade');
+        });
+
+        // 4. TRANSACTION
+        Schema::create('Transaction', function (Blueprint $table) {
+            $table->integer('t_id')->autoIncrement();
+            $table->integer('t_group_id');
+            $table->integer('t_user_payer_id');
+            $table->integer('t_user_debtor_id');
+            $table->integer('t_amount');
+            $table->string('t_currency', 10);
+            $table->integer('t_exchange_rate');
+            $table->string('t_label', 64)->nullable();
+            $table->timestamps();
+
+            $table->foreign('t_group_id')->references('group_id')->on('AGroup')->onUpdate('cascade');
+            $table->foreign('t_user_payer_id')->references('user_id')->on('User')->onUpdate('cascade');
+            $table->foreign('t_user_debtor_id')->references('user_id')->on('User')->onUpdate('cascade');
+        });
+
+        // 5. CHAT
+        Schema::create('Chat', function (Blueprint $table) {
+            $table->integer('message_id')->autoIncrement();
+            $table->integer('message_group_id');
+            $table->integer('message_user_id');
+            $table->text('message_text');
+            $table->timestamps();
+
+            $table->foreign('message_group_id')->references('group_id')->on('AGroup')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('message_user_id')->references('user_id')->on('User')->onUpdate('cascade');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('Chat');
+        Schema::dropIfExists('Transaction');
+        Schema::dropIfExists('GroupUser');
+        Schema::dropIfExists('AGroup');
+        Schema::dropIfExists('User');
+    }
+};

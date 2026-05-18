@@ -2,21 +2,36 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        // Účet 1: l@c
+        DB::table('User')->updateOrInsert(
+            ['user_email' => 'l@c'],
+            [
+                'user_firstname' => 'Lukáš',
+                'user_lastname' => 'Černý',
+                'user_password' => Hash::make('123456'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // Účet 2: f@v
+        DB::table('User')->updateOrInsert(
+            ['user_email' => 'f@v'],
+            [
+                'user_firstname' => 'Filip',
+                'user_lastname' => 'Veselý',
+                'user_password' => Hash::make('123456'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
     }
 }
