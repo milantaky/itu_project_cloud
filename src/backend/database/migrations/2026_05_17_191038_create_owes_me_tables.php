@@ -31,15 +31,11 @@ return new class extends Migration
 
         // 3. GROUPUSER (Pivot)
         Schema::create('GroupUser', function (Blueprint $table) {
-            $table->unsignedBigInteger('group_id');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('group_id')->constrained('AGroup', 'group_id')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained('User', 'user_id')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
-
-            // Složený primární klíč z unsignedBigInteger sloupců
+        
             $table->primary(['group_id', 'user_id']);
-            
-            $table->foreign('group_id')->references('group_id')->on('AGroup')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('user_id')->references('user_id')->on('User')->onDelete('cascade')->onUpdate('cascade');
         });
 
         // 4. TRANSACTION
