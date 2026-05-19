@@ -10,7 +10,7 @@ return new class extends Migration
     {
         // 1. USER
         Schema::create('User', function (Blueprint $table) {
-            $table->bigIncrements('user_id'); // Použijeme standardní bigIncrements
+            $table->bigIncrements('user_id'); 
             $table->string('user_firstname', 32);
             $table->string('user_lastname', 32);
             $table->string('user_email', 32);
@@ -30,17 +30,15 @@ return new class extends Migration
         });
 
         // 3. GROUPUSER (Pivot)
-        Schema::create('group_user', function (Blueprint $table) {
-            $table->bigIncrements('id'); // Klasické jedno ID jako primární klíč
+        Schema::create('GroupUser', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('group_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
-            // Cizí klíče
             $table->foreign('group_id')->references('group_id')->on('AGroup')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('user_id')->references('user_id')->on('User')->onDelete('cascade')->onUpdate('cascade');
 
-            // Unikátnost dvojice zajistíme tímto indexem namísto složeného primárního klíče
             $table->unique(['group_id', 'user_id']);
         });
 
