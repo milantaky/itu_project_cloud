@@ -10,7 +10,7 @@ return new class extends Migration
     {
         // 1. USER
         Schema::create('User', function (Blueprint $table) {
-            $table->integer('user_id')->autoIncrement();
+            $table->bigIncrements('user_id'); // Použijeme standardní bigIncrements
             $table->string('user_firstname', 32);
             $table->string('user_lastname', 32);
             $table->string('user_email', 32);
@@ -21,7 +21,7 @@ return new class extends Migration
 
         // 2. AGROUP
         Schema::create('AGroup', function (Blueprint $table) {
-            $table->integer('group_id')->autoIncrement();
+            $table->bigIncrements('group_id');
             $table->string('group_name', 32);
             $table->string('group_label', 64)->nullable();
             $table->string('group_link', 128)->nullable();
@@ -31,10 +31,11 @@ return new class extends Migration
 
         // 3. GROUPUSER (Pivot)
         Schema::create('GroupUser', function (Blueprint $table) {
-            $table->integer('group_id');
-            $table->integer('user_id');
+            $table->unsignedBigInteger('group_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
+            // Složený primární klíč z unsignedBigInteger sloupců
             $table->primary(['group_id', 'user_id']);
             
             $table->foreign('group_id')->references('group_id')->on('AGroup')->onDelete('cascade')->onUpdate('cascade');
@@ -43,10 +44,10 @@ return new class extends Migration
 
         // 4. TRANSACTION
         Schema::create('Transaction', function (Blueprint $table) {
-            $table->integer('t_id')->autoIncrement();
-            $table->integer('t_group_id');
-            $table->integer('t_user_payer_id');
-            $table->integer('t_user_debtor_id');
+            $table->bigIncrements('t_id');
+            $table->unsignedBigInteger('t_group_id');
+            $table->unsignedBigInteger('t_user_payer_id');
+            $table->unsignedBigInteger('t_user_debtor_id');
             $table->integer('t_amount');
             $table->string('t_currency', 10);
             $table->integer('t_exchange_rate');
@@ -60,9 +61,9 @@ return new class extends Migration
 
         // 5. CHAT
         Schema::create('Chat', function (Blueprint $table) {
-            $table->integer('message_id')->autoIncrement();
-            $table->integer('message_group_id');
-            $table->integer('message_user_id');
+            $table->bigIncrements('message_id');
+            $table->unsignedBigInteger('message_group_id');
+            $table->unsignedBigInteger('message_user_id');
             $table->text('message_text');
             $table->timestamps();
 
