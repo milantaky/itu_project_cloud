@@ -26,14 +26,15 @@ jobs:
       - name: Zip artifact for deployment
         run: |
           cd src/backend
-          zip -r ../../release.zip .
+          zip -r release.zip .
+          mv release.zip ../../
 
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: "hw2-backend-takac"
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: release.zip
+          package: ./release.zip
 
   deploy-frontend:
     runs-on: ubuntu-latest
