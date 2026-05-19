@@ -30,12 +30,18 @@ return new class extends Migration
         });
 
         // 3. GROUPUSER (Pivot)
-        Schema::create('GroupUser', function (Blueprint $table) {
-            $table->foreignId('group_id')->constrained('AGroup', 'group_id')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('user_id')->constrained('User', 'user_id')->onDelete('cascade')->onUpdate('cascade');
+        Schema::create('group_user', function (Blueprint $table) {
+            $table->bigIncrements('id'); // Klasické jedno ID jako primární klíč
+            $table->unsignedBigInteger('group_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
-        
-            $table->primary(['group_id', 'user_id']);
+
+            // Cizí klíče
+            $table->foreign('group_id')->references('group_id')->on('AGroup')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('user_id')->on('User')->onDelete('cascade')->onUpdate('cascade');
+
+            // Unikátnost dvojice zajistíme tímto indexem namísto složeného primárního klíče
+            $table->unique(['group_id', 'user_id']);
         });
 
         // 4. TRANSACTION
