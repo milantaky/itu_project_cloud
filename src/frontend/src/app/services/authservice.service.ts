@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthserviceService {
-  private apiUrlRegister =   'http://localhost:8000/api/register';
-  private apiUrlLogin =      'http://localhost:8000/api/login';
-  private apiUrlUpdateUser = 'http://localhost:8000/api/update-user';
-  private apiUrlGetUser = 'http://localhost:8000/api/get-user';
-  private apiUrlLoadBalance = 'http://localhost:8000/api/user-balance';
+  private apiUrlRegister =   'https://hw2-backend-takac-cxejfpb3bqg2bdh8.swedencentral-01.azurewebsites.net/api/register';
+  private apiUrlLogin =      'https://hw2-backend-takac-cxejfpb3bqg2bdh8.swedencentral-01.azurewebsites.net/api/login';
+  private apiUrlUpdateUser = 'https://hw2-backend-takac-cxejfpb3bqg2bdh8.swedencentral-01.azurewebsites.net/api/update-user';
+  private apiUrlGetUser = 'https://hw2-backend-takac-cxejfpb3bqg2bdh8.swedencentral-01.azurewebsites.net/api/api/get-user';
+  private apiUrlLoadBalance = 'https://hw2-backend-takac-cxejfpb3bqg2bdh8.swedencentral-01.azurewebsites.net/api/user-balance';
 
   constructor(private http: HttpClient) { }
 

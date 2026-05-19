@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ServiceGroupListService {
-  private apiUrl = 'http://localhost:8000/api/';
+  private apiUrl = 'https://hw2-backend-takac-cxejfpb3bqg2bdh8.swedencentral-01.azurewebsites.net/api/';
 
   constructor(private http: HttpClient) { }
 
