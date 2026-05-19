@@ -1,0 +1,60 @@
+name: Deploy Frontend and Backend to Azure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: mbstring, xml, ctype, iconv, mysql
+
+      - name: Install Composer dependencies
+        run: |
+          cd src/backend
+          composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader
+
+      - name: Zip artifact for deployment
+        run: |
+          cd src/backend
+          zip -r ../../release.zip .
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: "hw2-backend-takac"
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: release.zip
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies and Build Angular
+        run: |
+          cd src/frontend
+          npm ci
+          npm run build -- --configuration=production
+
+      - name: Upload to Azure Blob Storage
+        uses: azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az storage blob upload-batch --connection-string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" --destination '$web' --source src/frontend/dist/ --overwrite
