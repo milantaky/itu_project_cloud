@@ -21,7 +21,7 @@ jobs:
       - name: Install Composer dependencies
         run: |
           cd src/backend
-          composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader
+          composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --optimize-autoloader
 
       - name: Zip artifact for deployment
         run: |
